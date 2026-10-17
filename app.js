@@ -1,49 +1,518 @@
-const starterApps = [
- {id:"demo-1",name:"Nova Tools",category:"Tools",icon:"🧰",description:"A demo listing for useful everyday utilities.",url:"https://www.google.com",featured:true},
- {id:"demo-2",name:"Pixel Studio",category:"Creative",icon:"🎨",description:"A sample creative app listing for designers and makers.",url:"https://www.adobe.com",featured:true},
- {id:"demo-3",name:"Game Zone",category:"Gaming",icon:"🎮",description:"A demo gaming listing. Add your trusted game links here.",url:"https://play.google.com/store",featured:false},
- {id:"demo-4",name:"AI Companion",category:"AI",icon:"🤖",description:"A sample AI tools listing for curious minds.",url:"https://chatgpt.com",featured:true},
- {id:"demo-5",name:"Clip Maker",category:"Creative",icon:"✂️",description:"A demo video and editing tools listing.",url:"https://www.capcut.com",featured:false},
- {id:"demo-6",name:"File Manager",category:"Tools",icon:"📁",description:"A sample file utility listing for your collection.",url:"https://www.google.com",featured:false}
+/* ==========================================
+   KIRUU APPS HUB PRO
+   Made with ⚡ by KIRAN
+========================================== */
+
+const DEFAULT_APPS = [
+  {
+    id: "bgmi",
+    name: "BGMI",
+    category: "Games",
+    icon: "🎮",
+    description: "Battle royale gaming experience.",
+    url: "https://www.battlegroundsmobileindia.com/"
+  },
+  {
+    id: "youtube",
+    name: "YouTube",
+    category: "Entertainment",
+    icon: "▶️",
+    description: "Videos, creators and gaming highlights.",
+    url: "https://www.youtube.com/"
+  },
+  {
+    id: "instagram",
+    name: "Instagram",
+    category: "Social",
+    icon: "📸",
+    description: "Share photos, reels and moments.",
+    url: "https://www.instagram.com/"
+  },
+  {
+    id: "whatsapp",
+    name: "WhatsApp",
+    category: "Social",
+    icon: "💬",
+    description: "Message and call your friends.",
+    url: "https://www.whatsapp.com/"
+  },
+  {
+    id: "spotify",
+    name: "Spotify",
+    category: "Entertainment",
+    icon: "🎧",
+    description: "Discover music and playlists.",
+    url: "https://www.spotify.com/"
+  },
+  {
+    id: "google",
+    name: "Google",
+    category: "Tools",
+    icon: "🔎",
+    description: "Search the web and find information.",
+    url: "https://www.google.com/"
+  },
+  {
+    id: "telegram",
+    name: "Telegram",
+    category: "Social",
+    icon: "✈️",
+    description: "Connect with friends and communities.",
+    url: "https://telegram.org/"
+  },
+  {
+    id: "chatgpt",
+    name: "ChatGPT",
+    category: "Tools",
+    icon: "🤖",
+    description: "Explore AI tools and get help with ideas.",
+    url: "https://chatgpt.com/"
+  }
 ];
-const STORAGE_KEY = "kiruu_apps_hub_v1";
+
+const STORAGE_KEY = "kiruuApps";
+
 let apps = loadApps();
-let currentCategory = "All";
-const $ = id => document.getElementById(id);
-function loadApps(){try{const saved=localStorage.getItem(STORAGE_KEY);return saved?JSON.parse(saved):starterApps.slice()}catch{return starterApps.slice()}}
-function saveApps(){localStorage.setItem(STORAGE_KEY,JSON.stringify(apps))}
-function safeUrl(value){try{const u=new URL(value);return ["https:","http:"].includes(u.protocol)?u.href:null}catch{return null}}
-function escapeHTML(value){return String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function renderApps(){
- const q=$("searchInput").value.trim().toLowerCase();
- const filtered=apps.filter(a=>(currentCategory==="All"||a.category===currentCategory)&&[a.name,a.category,a.description].join(" ").toLowerCase().includes(q));
- $("appGrid").innerHTML=filtered.map(a=>`<article class="app-card"><div class="app-card-top"><div class="app-icon">${escapeHTML(a.icon||"✨")}</div><span class="tag">${escapeHTML(a.category)}</span></div><h3>${escapeHTML(a.name)}</h3><p>${escapeHTML(a.description)}</p><div class="card-foot"><small>${a.featured?"✦ Featured app":"KIRUU collection"}</small><a class="card-link" href="${escapeHTML(safeUrl(a.url)||"#")}" target="_blank" rel="noopener noreferrer">Visit source ↗</a></div></article>`).join("");
- $("emptyState").classList.toggle("hidden",filtered.length>0);
- $("appCount").textContent=apps.length;$("allCount").textContent=apps.length;
+let selectedCategory = "All";
+let editingId = null;
+
+
+/* ---------- STORAGE ---------- */
+
+function loadApps() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+
+    if (saved !== null) {
+      const parsed = JSON.parse(saved);
+
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    }
+  } catch (error) {
+    console.warn("App storage could not be loaded:", error);
+  }
+
+  return DEFAULT_APPS.map(app => ({ ...app }));
 }
-function renderManage(){
- $("manageList").innerHTML=apps.map(a=>`<div class="manage-item"><span>${escapeHTML(a.icon||"✨")}</span><div class="manage-name"><b>${escapeHTML(a.name)}</b><small>${escapeHTML(a.category)}</small></div><button class="delete-btn" data-delete="${escapeHTML(a.id)}">Delete</button></div>`).join("")||'<p class="dialog-note">No apps yet.</p>';
+
+function saveAppsToStorage() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(apps));
+    return true;
+  } catch (error) {
+    alert("Storage unavailable. Please check your browser settings.");
+    return false;
+  }
 }
-function toast(message){const t=$("toast");t.textContent=message;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2600)}
-$("searchInput").addEventListener("input",renderApps);
-document.querySelectorAll(".filter").forEach(btn=>btn.addEventListener("click",()=>{currentCategory=btn.dataset.category;document.querySelectorAll(".filter").forEach(b=>b.classList.toggle("active",b===btn));renderApps()}));
-$("adminOpen").addEventListener("click",()=>{$("adminDialog").showModal();$("navLinks").classList.remove("open")});
-$("menuBtn").addEventListener("click",()=>$("navLinks").classList.toggle("open"));
-document.querySelectorAll("#navLinks a").forEach(a=>a.addEventListener("click",()=>$("navLinks").classList.remove("open")));
-$("loginBtn").addEventListener("click",()=>{
- if($("adminUser").value.trim().toLowerCase()==="kiran"&&$("adminPass").value==="demo123"){
-  $("loginError").classList.add("hidden");$("loginPane").classList.add("hidden");$("adminPane").classList.remove("hidden");renderManage();toast("Demo panel opened");
- }else $("loginError").classList.remove("hidden");
+
+
+/* ---------- HELPERS ---------- */
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, character => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[character]);
+}
+
+function safeURL(value) {
+  try {
+    const url = new URL(String(value).trim());
+
+    if (url.protocol === "https:" || url.protocol === "http:") {
+      return url.href;
+    }
+  } catch (error) {
+    // Invalid URL
+  }
+
+  return "";
+}
+
+function getElement(id) {
+  return document.getElementById(id);
+}
+
+
+/* ---------- HOMEPAGE ---------- */
+
+function renderApps() {
+  const grid = getElement("appGrid");
+
+  if (!grid) return;
+
+  const searchInput = getElement("searchInput");
+  const search = searchInput
+    ? searchInput.value.toLowerCase().trim()
+    : "";
+
+  const filteredApps = apps.filter(app => {
+    const categoryMatch =
+      selectedCategory === "All" ||
+      app.category === selectedCategory;
+
+    const searchableText = [
+      app.name,
+      app.category,
+      app.description
+    ].join(" ").toLowerCase();
+
+    return categoryMatch && searchableText.includes(search);
+  });
+
+  if (filteredApps.length === 0) {
+    grid.innerHTML = "";
+  } else {
+    grid.innerHTML = filteredApps.map((app, index) => {
+      const url = safeURL(app.url);
+
+      return `
+        <article class="app-card"
+          style="animation-delay:${Math.min(index * 70, 350)}ms">
+
+          <div class="app-icon">
+            ${escapeHTML(app.icon || "📱")}
+          </div>
+
+          <h3>${escapeHTML(app.name)}</h3>
+
+          <p>${escapeHTML(app.description)}</p>
+
+          <div class="app-meta">
+            <span class="app-category">
+              ${escapeHTML(app.category)}
+            </span>
+
+            ${
+              url
+                ? `<a class="download-button"
+                     href="${escapeHTML(url)}"
+                     target="_blank"
+                     rel="noopener noreferrer">
+                     VISIT ↗
+                   </a>`
+                : `<span>Link unavailable</span>`
+            }
+          </div>
+        </article>
+      `;
+    }).join("");
+  }
+
+  const emptyState = getElement("emptyState");
+
+  if (emptyState) {
+    emptyState.hidden = filteredApps.length > 0;
+  }
+
+  updateCount("appCount", apps.length);
+  updateCount("heroAppCount", apps.length);
+  updateCount("adminCount", apps.length);
+
+  renderAdminApps();
+}
+
+function updateCount(id, count) {
+  const element = getElement(id);
+
+  if (element) {
+    element.textContent = count;
+  }
+}
+
+
+/* ---------- CATEGORY FILTER ---------- */
+
+function setCategory(category, button) {
+  selectedCategory = category;
+
+  document.querySelectorAll(".category").forEach(item => {
+    item.classList.remove("active");
+  });
+
+  if (button) {
+    button.classList.add("active");
+  }
+
+  renderApps();
+}
+
+
+/* ---------- ADMIN LOGIN ---------- */
+
+function openAdmin() {
+  const modal = getElement("adminModal");
+
+  if (modal) {
+    modal.hidden = false;
+  }
+
+  const loginSection = getElement("loginSection");
+  const dashboard = getElement("dashboard");
+
+  if (loginSection) loginSection.hidden = false;
+  if (dashboard) dashboard.hidden = true;
+
+  const error = getElement("loginError");
+
+  if (error) error.textContent = "";
+
+  document.body.style.overflow = "hidden";
+}
+
+function closeAdmin() {
+  const modal = getElement("adminModal");
+
+  if (modal) {
+    modal.hidden = true;
+  }
+
+  document.body.style.overflow = "";
+}
+
+function loginAdmin(event) {
+  event.preventDefault();
+
+  const username = getElement("adminUsername")?.value.trim();
+  const password = getElement("adminPassword")?.value;
+
+  const error = getElement("loginError");
+
+  if (username === "kiran" && password === "demo123") {
+    getElement("loginSection").hidden = true;
+    getElement("dashboard").hidden = false;
+
+    if (error) error.textContent = "";
+
+    renderApps();
+  } else {
+    if (error) {
+      error.textContent = "Incorrect username or password.";
+    }
+  }
+}
+
+function logoutAdmin() {
+  const loginSection = getElement("loginSection");
+  const dashboard = getElement("dashboard");
+
+  if (loginSection) loginSection.hidden = false;
+  if (dashboard) dashboard.hidden = true;
+
+  const username = getElement("adminUsername");
+  const password = getElement("adminPassword");
+
+  if (username) username.value = "";
+  if (password) password.value = "";
+
+  const error = getElement("loginError");
+
+  if (error) error.textContent = "";
+}
+
+
+/* ---------- ADD / EDIT APP ---------- */
+
+function saveApp(event) {
+  event.preventDefault();
+
+  const name = getElement("newAppName").value.trim();
+  const category = getElement("newAppCategory").value;
+  const icon = getElement("newAppIcon").value.trim() || "📱";
+  const description =
+    getElement("newAppDescription").value.trim();
+  const rawURL = getElement("newAppUrl").value.trim();
+  const url = safeURL(rawURL);
+
+  if (!name || !description || !url) {
+    alert("Please enter the app name, description and a valid website URL.");
+    return;
+  }
+
+  if (
+    !["Games", "Tools", "Social", "Entertainment"].includes(category)
+  ) {
+    alert("Please select a valid category.");
+    return;
+  }
+
+  if (editingId) {
+    const index = apps.findIndex(app => app.id === editingId);
+
+    if (index !== -1) {
+      apps[index] = {
+        ...apps[index],
+        name,
+        category,
+        icon,
+        description,
+        url
+      };
+    }
+  } else {
+    apps.unshift({
+      id: "app-" + Date.now(),
+      name,
+      category,
+      icon,
+      description,
+      url
+    });
+  }
+
+  if (!saveAppsToStorage()) return;
+
+  resetAppForm();
+  renderApps();
+
+  alert(editingId ? "App updated successfully!" : "App added successfully!");
+}
+
+function editApp(id) {
+  const app = apps.find(item => item.id === id);
+
+  if (!app) return;
+
+  editingId = id;
+
+  getElement("editId").value = id;
+  getElement("newAppName").value = app.name;
+  getElement("newAppCategory").value = app.category;
+  getElement("newAppIcon").value = app.icon || "";
+  getElement("newAppDescription").value = app.description;
+  getElement("newAppUrl").value = app.url;
+
+  const submitButton = getElement("appForm")
+    ?.querySelector('button[type="submit"]');
+
+  if (submitButton) {
+    submitButton.textContent = "UPDATE APP ✓";
+  }
+
+  getElement("appForm")?.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+}
+
+function resetAppForm() {
+  const form = getElement("appForm");
+
+  if (form) form.reset();
+
+  editingId = null;
+
+  const editId = getElement("editId");
+
+  if (editId) editId.value = "";
+
+  const submitButton = form
+    ?.querySelector('button[type="submit"]');
+
+  if (submitButton) {
+    submitButton.textContent = "SAVE APP +";
+  }
+}
+
+
+/* ---------- DELETE APP ---------- */
+
+function deleteApp(id) {
+  const app = apps.find(item => item.id === id);
+
+  if (!app) return;
+
+  const confirmed = confirm(
+    `Are you sure you want to delete "${app.name}"?`
+  );
+
+  if (!confirmed) return;
+
+  apps = apps.filter(item => item.id !== id);
+
+  if (!saveAppsToStorage()) return;
+
+  if (editingId === id) {
+    resetAppForm();
+  }
+
+  renderApps();
+}
+
+
+/* ---------- ADMIN APP LIST ---------- */
+
+function renderAdminApps() {
+  const list = getElement("adminAppList");
+
+  if (!list) return;
+
+  if (apps.length === 0) {
+    list.innerHTML = "<p>No apps available yet.</p>";
+    return;
+  }
+
+  list.innerHTML = apps.map(app => `
+    <div class="admin-app-item">
+
+      <div class="app-icon">
+        ${escapeHTML(app.icon || "📱")}
+      </div>
+
+      <div class="admin-app-details">
+        <strong>${escapeHTML(app.name)}</strong>
+        <small>${escapeHTML(app.category)}</small>
+      </div>
+
+      <button
+        type="button"
+        class="small-action"
+        onclick="editApp('${escapeHTML(app.id)}')">
+        EDIT
+      </button>
+
+      <button
+        type="button"
+        class="small-action delete-action"
+        onclick="deleteApp('${escapeHTML(app.id)}')">
+        DELETE
+      </button>
+
+    </div>
+  `).join("");
+}
+
+
+/* ---------- ANNOUNCEMENT ---------- */
+
+function closeNotice() {
+  const notice = getElement("noticeWrap");
+
+  if (notice) {
+    notice.hidden = true;
+  }
+}
+
+
+/* ---------- STARTUP ---------- */
+
+document.addEventListener("DOMContentLoaded", function () {
+  const year = getElement("year");
+
+  if (year) {
+    year.textContent = new Date().getFullYear();
+  }
+
+  const noticeClose = getElement("noticeClose");
+
+  if (noticeClose) {
+    noticeClose.addEventListener("click", closeNotice);
+  }
+
+  renderApps();
 });
-$("addAppBtn").addEventListener("click",()=>{
- const name=$("newName").value.trim(),category=$("newCategory").value,icon=$("newIcon").value.trim()||"✨",description=$("newDescription").value.trim(),url=safeUrl($("newUrl").value.trim());
- if(!name||!description||!url){toast("Add name, description and a valid http(s) URL.");return}
- apps.unshift({id:"app-"+Date.now(),name,category,icon,description,url,featured:false});saveApps();renderApps();renderManage();
- ["newName","newIcon","newDescription","newUrl"].forEach(id=>$(id).value="");toast("App added in this browser");
-});
-$("manageList").addEventListener("click",e=>{const btn=e.target.closest("[data-delete]");if(!btn)return;apps=apps.filter(a=>a.id!==btn.dataset.delete);saveApps();renderApps();renderManage();toast("App removed from this browser")});
-$("logoutBtn").addEventListener("click",()=>{$("adminPane").classList.add("hidden");$("loginPane").classList.remove("hidden");$("adminUser").value="";$("adminPass").value="";toast("Logged out")});
-$("adminDialog").addEventListener("close",()=>{if(!$("adminPane").classList.contains("hidden")){$("adminPane").classList.add("hidden");$("loginPane").classList.remove("hidden")}});
-$("year").textContent=new Date().getFullYear();
-if("serviceWorker" in navigator && location.protocol.startsWith("http")) window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
-renderApps();
