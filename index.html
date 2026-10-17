@@ -16,7 +16,80 @@
 
   <link rel="stylesheet" href="style.css">
 </head>
+  
+<canvas id="kiruu-rain"></canvas>
 
+<style>
+#kiruu-rain {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.55;
+}
+</style>
+
+<script>
+(() => {
+  const canvas = document.getElementById("kiruu-rain");
+  const ctx = canvas.getContext("2d");
+
+  let w, h, drops = [];
+
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = window.innerWidth;
+    h = window.innerHeight;
+
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    drops = Array.from(
+      { length: Math.min(180, Math.floor(w / 4)) },
+      () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        length: 10 + Math.random() * 20,
+        speed: 5 + Math.random() * 8,
+        drift: -1.5 - Math.random() * 2
+      })
+    );
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, w, h);
+    ctx.lineWidth = 1;
+    ctx.lineCap = "round";
+
+    for (const d of drops) {
+      ctx.beginPath();
+      ctx.strokeStyle = "rgba(170,215,255,0.65)";
+      ctx.moveTo(d.x, d.y);
+      ctx.lineTo(d.x + d.drift, d.y + d.length);
+      ctx.stroke();
+
+      d.x += d.drift;
+      d.y += d.speed;
+
+      if (d.y > h) {
+        d.y = -d.length;
+        d.x = Math.random() * w;
+      }
+
+      if (d.x < -10) d.x = w + 5;
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  window.addEventListener("resize", resize);
+  resize();
+  animate();
+})();
+</script>
 <body>
 
   <div class="background-effects">
