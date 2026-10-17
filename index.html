@@ -1,91 +1,176 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#090b14">
-  <meta name="description" content="KIRUU APPS HUB — discover apps, games and tools. Made by Kiran.">
-  <title>KIRUU APPS HUB</title>
-  <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080b14">
+<title>KIRUU APPS HUB PRO</title>
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
-  <header class="topbar">
-    <a class="brand" href="#" aria-label="KIRUU APPS HUB home">
-      <span class="brand-mark">K<span>H</span></span>
-      <span><strong>KIRUU <em>APPS HUB</em></strong><small>MADE BY KIRAN</small></span>
-    </a>
-    <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
-    <nav id="navLinks">
-      <a href="#explore">Explore</a><a href="#categories">Categories</a><a href="#about">About</a>
-      <button class="admin-open" id="adminOpen">Admin Login</button>
-    </nav>
-  </header>
 
-  <main>
-    <section class="hero">
-      <div class="hero-copy">
-        <div class="eyebrow"><span class="pulse"></span> YOUR DIGITAL DISCOVERY HUB</div>
-        <h1>Find your next<br><span>favourite app.</span></h1>
-        <p>Discover useful apps, games and creative tools — all in one clean, modern place.</p>
-        <div class="hero-actions"><a class="btn primary" href="#explore">Explore Apps <span>↗</span></a><a class="btn ghost" href="#categories">Browse categories</a></div>
-        <div class="hero-stats"><div><b id="appCount">6</b><small>DEMO APPS</small></div><i></i><div><b>4</b><small>CATEGORIES</small></div><i></i><div><b>24/7</b><small>DISCOVERY</small></div></div>
-      </div>
-      <div class="hero-art" aria-hidden="true">
-        <div class="orbit orbit-a"></div><div class="orbit orbit-b"></div>
-        <div class="glass-card main-tile"><div class="tile-top"><span class="mini-dot"></span><span class="mini-dot"></span><span class="mini-dot"></span><small>APP SPOTLIGHT</small></div><div class="big-app-icon">✦</div><h3>Discover more.</h3><p>Tools for your everyday</p><div class="tile-line"></div><div class="tile-line short"></div></div>
-        <div class="float-icon icon-a">🎮</div><div class="float-icon icon-b">✂️</div><div class="float-icon icon-c">🤖</div>
-        <div class="glow-ring"></div>
-      </div>
-    </section>
-
-    <section class="quick-strip"><div><span>✦</span> Curated discoveries</div><div><span>◈</span> Simple downloads</div><div><span>⌁</span> Mobile-friendly</div><div><span>↗</span> Made for explorers</div></section>
-
-    <section class="section" id="explore">
-      <div class="section-head"><div><div class="eyebrow">THE COLLECTION</div><h2>Explore <span>apps.</span></h2><p>Find something useful for your next idea.</p></div><div class="search-wrap"><span>⌕</span><input id="searchInput" type="search" placeholder="Search apps..." aria-label="Search apps"></div></div>
-      <div class="filter-row" id="categories">
-        <button class="filter active" data-category="All">All apps <span id="allCount">6</span></button>
-        <button class="filter" data-category="Tools">Tools</button><button class="filter" data-category="Gaming">Gaming</button><button class="filter" data-category="Creative">Creative</button><button class="filter" data-category="AI">AI</button>
-      </div>
-      <div class="app-grid" id="appGrid" aria-live="polite"></div>
-      <div class="empty-state hidden" id="emptyState">No apps found. Try another search.</div>
-    </section>
-
-    <section class="promo">
-      <div class="promo-symbol">✧</div><div><div class="eyebrow">BUILT FOR DISCOVERY</div><h2>Good apps. <span>One hub.</span></h2><p>Have an app suggestion? Check back as the collection grows.</p></div><a class="btn primary" href="#explore">Explore collection ↗</a>
-    </section>
-
-    <section class="about section" id="about"><div class="eyebrow">THE STORY</div><h2>Welcome to <span>KIRUU.</span></h2><p>KIRUU APPS HUB is a discovery project made by Kiran. App availability and download destinations may vary by device and region. Always download from trusted, official sources.</p></section>
-  </main>
-
-  <footer><a class="brand footer-brand" href="#"><span class="brand-mark">K<span>H</span></span><span><strong>KIRUU <em>APPS HUB</em></strong><small>MADE BY KIRAN</small></span></a><p>© <span id="year"></span> KIRUU APPS HUB · Made with curiosity.</p><a href="#top" class="back-top">Back to top ↑</a></footer>
-
-  <dialog id="adminDialog" class="admin-dialog">
-    <form method="dialog" class="dialog-head"><div><div class="eyebrow">OWNER ACCESS</div><h2>Admin <span>panel.</span></h2></div><button class="close-btn" aria-label="Close">×</button></form>
-    <div id="loginPane">
-      <p class="dialog-note">Demo interface only. Set up a real server-side authentication system before using this panel publicly.</p>
-      <label>Demo username<input id="adminUser" autocomplete="username" placeholder="Enter username"></label>
-      <label>Demo password<input id="adminPass" type="password" autocomplete="current-password" placeholder="Enter password"></label>
-      <button class="btn primary full" id="loginBtn" type="button">Open demo panel</button>
-      <p class="hint">Demo login: <b>kiran</b> / <b>demo123</b></p>
-      <p id="loginError" class="error hidden">Incorrect demo login.</p>
+<header class="navbar">
+  <div class="logo">
+    <div class="logo-icon">K</div>
+    <div>
+      <h2>KIRUU</h2>
+      <span>APPS HUB <b>PRO</b></span>
     </div>
-    <div id="adminPane" class="hidden">
-      <p class="dialog-note">Changes are saved in this browser only. This demo does not upload APK files or sync across devices.</p>
-      <div class="admin-form">
-        <label>App name<input id="newName" placeholder="e.g. My Utility"></label>
-        <label>Category<select id="newCategory"><option>Tools</option><option>Gaming</option><option>Creative</option><option>AI</option></select></label>
-        <label>Icon emoji<input id="newIcon" maxlength="4" placeholder="✨"></label>
-        <label>Short description<input id="newDescription" placeholder="What does it do?"></label>
-        <label>Official website / download URL<input id="newUrl" type="url" placeholder="https://example.com"></label>
-        <button class="btn primary full" id="addAppBtn" type="button">＋ Add app</button>
-      </div>
-      <h3 class="manage-title">Manage apps</h3><div id="manageList" class="manage-list"></div>
-      <button class="btn ghost full logout-btn" id="logoutBtn" type="button">Log out</button>
+  </div>
+
+  <button class="admin-button" onclick="openAdmin()">
+    ADMIN ↗
+  </button>
+</header>
+
+<section class="hero">
+  <div class="badge">✦ PREMIUM APP DISCOVERY</div>
+
+  <h1>
+    Discover More.<br>
+    <span>Do More.</span>
+  </h1>
+
+  <p>
+    Welcome to KIRUU APPS HUB PRO.<br>
+    Your world of apps, games and digital tools.
+  </p>
+
+  <div class="search-box">
+    <span>⌕</span>
+    <input
+      type="search"
+      id="searchInput"
+      placeholder="Search apps and games..."
+      oninput="renderApps()"
+    >
+  </div>
+
+  <div class="stats">
+    <div>
+      <h2 id="appCount">0</h2>
+      <p>AVAILABLE APPS</p>
     </div>
-  </dialog>
-  <div class="toast" id="toast" role="status"></div>
-  <script src="app.js"></script>
+    <div>
+      <h2>PRO</h2>
+      <p>PREMIUM EXPERIENCE</p>
+    </div>
+    <div>
+      <h2>24/7</h2>
+      <p>EXPLORE ANYTIME</p>
+    </div>
+  </div>
+</section>
+
+<main class="container">
+
+  <div class="section-heading">
+    <div>
+      <small>EXPLORE THE COLLECTION</small>
+      <h2>Popular Apps<span>.</span></h2>
+    </div>
+  </div>
+
+  <div class="categories">
+    <button class="category active" onclick="setCategory('All',this)">All</button>
+    <button class="category" onclick="setCategory('Games',this)">Games</button>
+    <button class="category" onclick="setCategory('Tools',this)">Tools</button>
+    <button class="category" onclick="setCategory('Social',this)">Social</button>
+    <button class="category" onclick="setCategory('Entertainment',this)">Entertainment</button>
+  </div>
+
+  <div id="appGrid" class="app-grid"></div>
+
+  <div id="emptyState" class="empty" hidden>
+    <h2>No apps found</h2>
+    <p>Try another search or category.</p>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-logo">KIRUU APPS HUB <span>PRO</span></div>
+  <p>Made with ⚡ by KIRAN</p>
+  <small>Download safely from trusted official sources.</small>
+</footer>
+
+<!-- ADMIN LOGIN -->
+
+<div id="adminModal" class="modal" hidden>
+  <div class="modal-box">
+
+    <button class="close-button" onclick="closeAdmin()">×</button>
+
+    <div id="loginSection">
+      <div class="logo-icon">K</div>
+      <h2>Admin Login</h2>
+      <p>Welcome back, Kiran.</p>
+
+      <form onsubmit="loginAdmin(event)">
+        <label>Username</label>
+        <input id="adminUsername" required placeholder="Enter username">
+
+        <label>Password</label>
+        <input id="adminPassword" type="password" required placeholder="Enter password">
+
+        <button class="primary-button" type="submit">LOGIN →</button>
+
+        <p id="loginError" class="error"></p>
+      </form>
+
+      <small>Demo login: kiran / demo123</small>
+    </div>
+
+    <div id="dashboard" hidden>
+      <h2>Admin Dashboard</h2>
+      <p>Welcome, Kiran 👑</p>
+
+      <div class="dashboard-stats">
+        Total apps: <b id="adminCount">0</b>
+      </div>
+
+      <form id="appForm" onsubmit="saveApp(event)">
+        <input id="editId" type="hidden">
+
+        <label>App Name</label>
+        <input id="newAppName" required placeholder="App name">
+
+        <label>Category</label>
+        <select id="newAppCategory">
+          <option>Games</option>
+          <option>Tools</option>
+          <option>Social</option>
+          <option>Entertainment</option>
+          <option>Other</option>
+        </select>
+
+        <label>Icon / Emoji</label>
+        <input id="newAppIcon" value="📱" required>
+
+        <label>Description</label>
+        <textarea id="newAppDescription" required placeholder="Describe your app"></textarea>
+
+        <label>Official Download / Website URL</label>
+        <input id="newAppUrl" type="url" required placeholder="https://example.com">
+
+        <button class="primary-button" type="submit">SAVE APP +</button>
+      </form>
+
+      <h3>Manage Apps</h3>
+      <div id="adminAppList"></div>
+
+      <button class="secondary-button" onclick="logoutAdmin()">LOG OUT</button>
+
+      <p class="warning">
+        Demo panel only. Login and app changes are stored in this browser,
+        not in a secure server database.
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<script src="app.js"></script>
 </body>
 </html>
