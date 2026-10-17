@@ -1,0 +1,10 @@
+{
+  "name": "KIRUU APPS HUB",
+  "short_name": "KIRUU HUB",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#090b14",
+  "theme_color": "#090b14",
+  "description": "Discover apps, games and tools \u2014 Made by Kiran.",
+  "icons": []
+}
