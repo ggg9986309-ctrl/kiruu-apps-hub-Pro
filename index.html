@@ -89,7 +89,34 @@
   resize();
   animate();
 })();
-</script>
+</
+  <style>
+#kiruu-lightning {
+  position: fixed;
+  inset: 0;
+  background: rgba(200, 225, 255, 0);
+  pointer-events: none;
+  z-index: 9998;
+  animation: kiruuStorm 9s infinite;
+}
+
+@keyframes kiruuStorm {
+  0%, 90%, 92%, 96%, 100% {
+    background: rgba(200, 225, 255, 0);
+  }
+  91% {
+    background: rgba(200, 225, 255, 0.16);
+  }
+  93% {
+    background: rgba(200, 225, 255, 0);
+  }
+  95% {
+    background: rgba(200, 225, 255, 0.09);
+  }
+}
+</style>
+
+<div id="kiruu-lightning"></div>
 <body>
 
   <div class="background-effects">
